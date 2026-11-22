@@ -31,7 +31,7 @@ jobs:
           curl --fail --location --retry 3 \
             "https://storage.googleapis.com/download.tensorflow.org/data/speech_commands_v0.02.tar.gz" \
             --output "$RUNNER_TEMP/speech_commands_v0.02.tar.gz"
-          echo "af14739ee7dc311471de98f5f9d2c9191b18aedfe957f4a6ff791c709868ff58  $RUNNER_TEMP/speech_commands_v0.02.tar.gz" | | sha256sum -c -
+          echo "af14739ee7dc311471de98f5f9d2c9191b18aedfe957f4a6ff791c709868ff58  $RUNNER_TEMP/speech_commands_v0.02.tar.gz" | sha256sum -c -
           tar -xzf "$RUNNER_TEMP/speech_commands_v0.02.tar.gz" -C "$GSC_ROOT"
           test -f "$GSC_ROOT/validation_list.txt"
           test -f "$GSC_ROOT/testing_list.txt"
