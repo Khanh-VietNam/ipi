@@ -1,0 +1,64 @@
+name: Verify real Speech Commands v0.02
+
+on:
+  workflow_dispatch:
+
+jobs:
+  verify-gsc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GSC_ROOT: ${{ runner.temp }}/speech_commands_v0.02
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy==1.26.4 pytest soundfile
+          python -m pip install torch==2.5.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Download and extract official Speech Commands v0.02
+        run: |
+          mkdir -p "$GSC_ROOT"
+          curl --fail --location --retry 3 \
+            "https://storage.googleapis.com/download.tensorflow.org/data/speech_commands_v0.02.tar.gz" \
+            --output "$RUNNER_TEMP/speech_commands_v0.02.tar.gz"
+          echo "af14739ee7dc311471de98f5f9d2c9191b18aedfe957f4a6ff791c709868ff58  $RUNNER_TEMP/speech_commands_v0.02.tar.gz" | md5sum -c -
+          tar -xzf "$RUNNER_TEMP/speech_commands_v0.02.tar.gz" -C "$GSC_ROOT"
+          test -f "$GSC_ROOT/validation_list.txt"
+          test -f "$GSC_ROOT/testing_list.txt"
+
+      - name: Run all GSC tests on the real dataset
+        run: python -m pytest -q tests/test_gsc.py -rs
+
+      - name: Check official split counts and save evidence
+        run: |
+          python - <<'PY' | tee gsc_verification.txt
+          import os
+          from data.gsc import GSCDataset
+
+          expected = {"train": 84843, "validation": 9981, "test": 11005}
+          actual = {
+              split: len(GSCDataset(split=split, root=os.environ["GSC_ROOT"]))
+              for split in expected
+          }
+          print("Dataset: Google Speech Commands v0.02 (original WAVs)")
+          for split in expected:
+              print(f"{split}: actual={actual[split]}, expected={expected[split]}")
+          assert actual == expected, f"Split counts differ: {actual} != {expected}"
+          print("PASS: all three real-data split counts match")
+          PY
+
+      - name: Upload verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: gsc-real-split-verification
+          path: gsc_verification.txt
