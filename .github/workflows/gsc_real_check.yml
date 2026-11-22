@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
-      GSC_ROOT: ${{ runner.temp }}/speech_commands_v0.02
+     GSC_ROOT: speech_commands_v0.02
 
     steps:
       - name: Checkout repository
