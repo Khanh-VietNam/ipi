@@ -4,7 +4,7 @@ L2,"Alpaca: Intermittent Execution without Runtime Overhead","Maeng, Colin & Luc
 L3,Intermittent Computation without Hardware Support or Programmer Intervention,"Van der Woude & Hicks",OSDI,2016,Intermittent Execution
 L4,Clank: Architectural Support for Intermittent Computation,Hicks,ISCA,2017,Architecture
 L5,Intelligence Beyond the Edge: Inference on Intermittent Embedded Systems,"Gobieski et al.",ASPLOS,2019,Intermittent ML
-L6,InK: Intermittent Kernel for Tiny Microcontrollers,"Maeng et al.",ASPLOS,2020,OS Support
+L6,InK: Reactive Kernel for Tiny Batteryless Sensors,Yildirim et al.,SenSys,2018,OS Support,https://doi.org/10.1145/3274783.3274837,Not read,Verified
 L7,Coati: An Intermittent OS for Energy Harvesting,"Djukic et al.",DAC,2021,OS Support
 L8,Chard: Dynamic Task-based Intermittent Execution,"Gao et al.",DATE,2020,Task-based
 L9,Amber: Intermittent Computing with Non-Volatile Registers,"Knell et al.",ICCAD,2019,Hardware/Software
